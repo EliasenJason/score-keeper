@@ -41,6 +41,7 @@ const Scoreboard = () => {
       <div
         className="flex-1 flex items-center justify-center bg-blue-500 cursor-pointer"
         onClick={() => handleClick('A')}
+        onTouchStart={(e) => handleContextMenu(e, 'A')}
         onContextMenu={(e) => handleContextMenu(e, 'A')}
       >
         <div className="text-white text-4xl">{teamAScore}</div>
@@ -53,6 +54,7 @@ const Scoreboard = () => {
       <div
         className="flex-1 flex items-center justify-center bg-red-500 cursor-pointer"
         onClick={() => handleClick('B')}
+        onTouchStart={(e) => handleContextMenu(e, 'B')}
         onContextMenu={(e) => handleContextMenu(e, 'B')}
       >
         <div className="text-white text-4xl">{teamBScore}</div>
