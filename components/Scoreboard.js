@@ -6,6 +6,9 @@ const Scoreboard = () => {
   const [teamAScore, setTeamAScore] = useState(0);
   const [teamBScore, setTeamBScore] = useState(0);
 
+  let touchStartTimeA = 0;
+  let touchStartTimeB = 0;
+
   const handleIncrement = (team) => {
     if (team === 'A') {
       setTeamAScore(teamAScore + 1);
@@ -22,9 +25,22 @@ const Scoreboard = () => {
     }
   };
 
-  const handleContextMenu = (event, team) => {
-    event.preventDefault(); // Prevent the default context menu
-    handleDecrement(team);
+  const handleTouchStart = (team) => {
+    if (team === 'A') {
+      touchStartTimeA = new Date().getTime();
+    } else if (team === 'B') {
+      touchStartTimeB = new Date().getTime();
+    }
+  };
+
+  const handleTouchEnd = (event, team) => {
+    const touchEndTime = new Date().getTime();
+    const touchDuration = touchEndTime - (team === 'A' ? touchStartTimeA : touchStartTimeB);
+
+    if (touchDuration >= 1000) { // You can adjust the duration as needed
+      event.preventDefault(); // Prevent the default context menu
+      handleDecrement(team);
+    }
   };
 
   const handleClick = (team) => {
@@ -41,8 +57,8 @@ const Scoreboard = () => {
       <div
         className="flex-1 flex items-center justify-center bg-blue-500 cursor-pointer"
         onClick={() => handleClick('A')}
-        onTouchStart={(e) => handleContextMenu(e, 'A')}
-        onContextMenu={(e) => handleContextMenu(e, 'A')}
+        onTouchStart={() => handleTouchStart('A')}
+        onTouchEnd={(e) => handleTouchEnd(e, 'A')}
       >
         <div className="text-white text-4xl">{teamAScore}</div>
       </div>
@@ -54,8 +70,8 @@ const Scoreboard = () => {
       <div
         className="flex-1 flex items-center justify-center bg-red-500 cursor-pointer"
         onClick={() => handleClick('B')}
-        onTouchStart={(e) => handleContextMenu(e, 'B')}
-        onContextMenu={(e) => handleContextMenu(e, 'B')}
+        onTouchStart={() => handleTouchStart('B')}
+        onTouchEnd={(e) => handleTouchEnd(e, 'B')}
       >
         <div className="text-white text-4xl">{teamBScore}</div>
       </div>
