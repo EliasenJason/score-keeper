@@ -20,8 +20,10 @@ const Scoreboard = () => {
   const handleDecrement = (team) => {
     if (team === 'A') {
       setTeamAScore((prevScore) => prevScore - 1);
+      navigator.vibrate && navigator.vibrate(200); // Vibrate for 200 milliseconds
     } else if (team === 'B') {
       setTeamBScore((prevScore) => prevScore - 1);
+      navigator.vibrate && navigator.vibrate(200); // Vibrate for 200 milliseconds
     }
   };
 
