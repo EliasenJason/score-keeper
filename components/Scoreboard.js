@@ -1,13 +1,11 @@
 "use client"
 
 import { useState } from 'react';
+import { Swipeable } from 'react-swipeable';
 
 const Scoreboard = () => {
   const [teamAScore, setTeamAScore] = useState(0);
   const [teamBScore, setTeamBScore] = useState(0);
-
-  let touchStartTimeA = 0;
-  let touchStartTimeB = 0;
 
   const handleIncrement = (team) => {
     if (team === 'A') {
@@ -18,31 +16,16 @@ const Scoreboard = () => {
   };
 
   const handleDecrement = (team) => {
-    if (team === 'A') {
+    if (team === 'A' && teamAScore > 0) {
       setTeamAScore((prevScore) => prevScore - 1);
-      navigator.vibrate && navigator.vibrate(200); // Vibrate for 200 milliseconds
-    } else if (team === 'B') {
+    } else if (team === 'B' && teamBScore > 0) {
       setTeamBScore((prevScore) => prevScore - 1);
-      navigator.vibrate && navigator.vibrate(200); // Vibrate for 200 milliseconds
     }
   };
 
-  const handleTouchStart = (team) => {
-    if (team === 'A') {
-      touchStartTimeA = new Date().getTime();
-    } else if (team === 'B') {
-      touchStartTimeB = new Date().getTime();
-    }
-  };
-
-  const handleTouchEnd = (event, team) => {
-    const touchEndTime = new Date().getTime();
-    const touchDuration = touchEndTime - (team === 'A' ? touchStartTimeA : touchStartTimeB);
-
-    if (touchDuration >= 1000) { // You can adjust the duration as needed
-      event.preventDefault(); // Prevent the default context menu
-      handleDecrement(team);
-    }
+  const handleContextMenu = (event, team) => {
+    event.preventDefault(); // Prevent the default context menu
+    handleDecrement(team);
   };
 
   const handleClick = (team) => {
@@ -56,27 +39,29 @@ const Scoreboard = () => {
   return (
     <div className="flex h-screen">
       {/* Team A */}
-      <div
+      <Swipeable
         className="flex-1 flex items-center justify-center bg-blue-500 cursor-pointer"
         onClick={() => handleClick('A')}
-        onTouchStart={() => handleTouchStart('A')}
-        onTouchEnd={(e) => handleTouchEnd(e, 'A')}
+        onContextMenu={(e) => handleContextMenu(e, 'A')}
+        onSwipedUp={() => handleIncrement('A')}
+        onSwipedDown={() => handleDecrement('A')}
       >
-        <div className="text-white text-4xl">{teamAScore}</div>
-      </div>
+        <div className="text-white text-8xl select-none">{teamAScore}</div>
+      </Swipeable>
 
       {/* Divider */}
       <div className="w-2 bg-gray-500"></div>
 
       {/* Team B */}
-      <div
+      <Swipeable
         className="flex-1 flex items-center justify-center bg-red-500 cursor-pointer"
         onClick={() => handleClick('B')}
-        onTouchStart={() => handleTouchStart('B')}
-        onTouchEnd={(e) => handleTouchEnd(e, 'B')}
+        onContextMenu={(e) => handleContextMenu(e, 'B')}
+        onSwipedUp={() => handleIncrement('B')}
+        onSwipedDown={() => handleDecrement('B')}
       >
-        <div className="text-white text-4xl">{teamBScore}</div>
-      </div>
+        <div className="text-white text-8xl select-none">{teamBScore}</div>
+      </Swipeable>
     </div>
   );
 };
