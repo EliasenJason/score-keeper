@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from 'react';
-import { Swipeable } from 'react-swipeable';
+import { useState, useEffect } from 'react';
 
 const Scoreboard = () => {
   const [teamAScore, setTeamAScore] = useState(0);
@@ -36,32 +35,34 @@ const Scoreboard = () => {
     }
   };
 
+  const handleSwipe = (event) => {
+    const direction = event.direction;
+    console.log(direction)
+  }
+
   return (
     <div className="flex h-screen">
       {/* Team A */}
-      <Swipeable
+      <div
+        // onSwipe={handleSwipe}
         className="flex-1 flex items-center justify-center bg-blue-500 cursor-pointer"
         onClick={() => handleClick('A')}
         onContextMenu={(e) => handleContextMenu(e, 'A')}
-        onSwipedUp={() => handleIncrement('A')}
-        onSwipedDown={() => handleDecrement('A')}
       >
         <div className="text-white text-8xl select-none">{teamAScore}</div>
-      </Swipeable>
-
+      </div>
       {/* Divider */}
       <div className="w-2 bg-gray-500"></div>
 
       {/* Team B */}
-      <Swipeable
+      <div
+        // onSwipe={handleSwipe}
         className="flex-1 flex items-center justify-center bg-red-500 cursor-pointer"
         onClick={() => handleClick('B')}
         onContextMenu={(e) => handleContextMenu(e, 'B')}
-        onSwipedUp={() => handleIncrement('B')}
-        onSwipedDown={() => handleDecrement('B')}
       >
         <div className="text-white text-8xl select-none">{teamBScore}</div>
-      </Swipeable>
+      </div>
     </div>
   );
 };
